@@ -87,10 +87,17 @@ def book(
         "terms": "yes",
         "shift_id": "62",
         "type_of_user": "Gitam",
+        "registration__st_fee_hidden": "",
         "app_dept": "CSE",
         "campus": "BLR",
         "college": "GST",
+        "resource_id": "",
+        "resource": "UniSex Fitness Centre",
+        "std": "4",
         "empid": userid,
+        "applicant_name": " SAREDDY MADAN MOHAN REDDY",
+        "mobile": "9502175244",
+        "email": "msareddy@student.gitam.edu",
         "user_type": "student"
     }
 
