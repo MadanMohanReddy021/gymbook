@@ -2,3 +2,4 @@ fastapi
 uvicorn
 selenium
 httpx
+python-multipart
