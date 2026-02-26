@@ -9,11 +9,12 @@ from selenium.webdriver.support import expected_conditions as EC
 import httpx
 import re
 import os
+import traceback
 
 app = FastAPI()
 
 
-# ---------------- HOME ----------------
+# ---------------- HOME PAGE ----------------
 @app.get("/", response_class=HTMLResponse)
 @app.head("/")
 def home(request: Request):
@@ -23,7 +24,7 @@ def home(request: Request):
         return f.read()
 
 
-# ---------------- BOOK ----------------
+# ---------------- BOOK SLOT ----------------
 @app.post("/book")
 def book(
     userid: str = Form(...),
@@ -41,17 +42,21 @@ def book(
 
         formatted_date = selected_date.strftime("%d-%b-%Y")
 
-        # ---------- SELENIUM SETUP (DOCKER CHROMIUM) ----------
+        # ---------- SELENIUM SETUP (DOCKER SAFE) ----------
         chrome_options = webdriver.ChromeOptions()
         chrome_options.binary_location = "/usr/bin/chromium"
-        chrome_options.add_argument("--headless=new")
+
+        chrome_options.add_argument("--headless")
         chrome_options.add_argument("--no-sandbox")
         chrome_options.add_argument("--disable-dev-shm-usage")
+        chrome_options.add_argument("--disable-gpu")
+        chrome_options.add_argument("--window-size=1920,1080")
+        chrome_options.add_argument("--remote-debugging-port=9222")
 
         service = Service("/usr/bin/chromedriver")
-
         driver = webdriver.Chrome(service=service, options=chrome_options)
-        wait = WebDriverWait(driver, 25)
+
+        wait = WebDriverWait(driver, 30)
 
         # ---------- LOGIN ----------
         driver.get("https://login.gitam.edu/Login.aspx")
@@ -67,25 +72,25 @@ def book(
 
         wait.until(EC.url_contains("gstudent"))
 
-        # ---------- COPY COOKIES ----------
+        # ---------- COPY SESSION COOKIES ----------
         session = httpx.Client()
         for cookie in driver.get_cookies():
-            session.cookies.set(cookie['name'], cookie['value'])
+            session.cookies.set(cookie["name"], cookie["value"])
 
         driver.quit()
 
-        # ---------- OPEN SPORTS ----------
+        # ---------- OPEN SPORTS PAGE ----------
         r4 = session.get("https://gstudent.gitam.edu/Home/Gsports")
         html = r4.text
 
         match = re.search(r"window\.location\.href\s*=\s*'([^']+)'", html)
         if not match:
-            return {"error": "redirect url not found"}
+            return {"error": "sports redirect not found"}
 
         redirect_url = match.group(1)
         session.get(redirect_url)
 
-        # ---------- FULL BOOKING PAYLOAD ----------
+        # ---------- BOOKING PAYLOAD ----------
         payload = {
             "form-facility": "UniSex Fitness Centre",
             "facility": "31",
@@ -111,6 +116,7 @@ def book(
             "user_type": "student"
         }
 
+        # ---------- SEND BOOKING ----------
         r = session.post(
             "https://gsports.gitam.edu/schedule_st/schedule",
             data=payload
@@ -123,4 +129,7 @@ def book(
         }
 
     except Exception as e:
-        return {"error": str(e)}
+        return {
+            "error": str(e),
+            "trace": traceback.format_exc()
+        }
