@@ -11,8 +11,13 @@ import re
 import os
 import traceback
 import time
+import json
 
 app = FastAPI()
+
+# -------- LOAD USERS --------
+with open("users.json", "r") as f:
+    USERS = json.load(f)
 
 
 # ---------------- HOME ----------------
@@ -35,6 +40,13 @@ def book(
 ):
 
     try:
+
+        # -------- CHECK USER EXISTS --------
+        if userid not in USERS:
+            return {"error": "User not registered in system"}
+
+        user_data = USERS[userid]
+
         # ---------- DATE ----------
         if date == "today":
             selected_date = datetime.now()
@@ -58,7 +70,7 @@ def book(
         driver = webdriver.Chrome(service=service, options=chrome_options)
         wait = WebDriverWait(driver, 30)
 
-        # ---------- LOGIN PAGE ----------
+        # ---------- LOGIN ----------
         driver.get("https://login.gitam.edu/Login.aspx")
 
         username = wait.until(
@@ -69,16 +81,14 @@ def book(
         username.send_keys(userid)
         password_field.send_keys(password)
 
-        # ---------- READ CAPTCHA ----------
+        # ---------- CAPTCHA ----------
         wait.until(EC.presence_of_element_located((By.CLASS_NAME, "preview")))
         captcha_spans = driver.find_elements(By.CSS_SELECTOR, ".preview span")
-
         captcha_text = "".join([span.text for span in captcha_spans])
 
         captcha_input = driver.find_element(By.ID, "captcha_form")
         captcha_input.send_keys(captcha_text)
 
-        # ---------- CLICK LOGIN ----------
         driver.find_element(By.NAME, "Submit").click()
 
         time.sleep(6)
@@ -88,8 +98,7 @@ def book(
             driver.quit()
             return {
                 "error": "login failed",
-                "captcha_used": captcha_text,
-                "current_url": current_url
+                "captcha_used": captcha_text
             }
 
         # ---------- COPY COOKIES ----------
@@ -130,13 +139,12 @@ def book(
             "resource": "UniSex Fitness Centre",
             "std": "4",
             "empid": userid,
-            "applicant_name": "SAREDDY MADAN MOHAN REDDY",
-            "mobile": "9502175244",
-            "email": "msareddy@student.gitam.edu",
+            "applicant_name": user_data["name"],
+            "mobile": user_data["mobile"],
+            "email": user_data["email"],
             "user_type": "student"
         }
 
-        # ---------- BOOK SLOT ----------
         r = session.post(
             "https://gsports.gitam.edu/schedule_st/schedule",
             data=payload
@@ -144,6 +152,7 @@ def book(
 
         return {
             "booking_status_code": r.status_code,
+            "selected_user": user_data["name"],
             "selected_date": formatted_date,
             "selected_slot": timeslot
         }

@@ -2,39 +2,117 @@
 <html>
 <head>
     <title>GITAM Sports Booking</title>
+    <meta nAMe="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        body {
+            margin: 0;
+            font-fAMily: Arial, Helvetica, sans-serif;
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .card {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0px 10px 30px rgba(0,0,0,0.3);
+            width: 350px;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 25px;
+            color: #2c5364;
+        }
+
+        label {
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px;
+            margin-top: 6px;
+            margin-bottom: 18px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            font-size: 14px;
+            transition: 0.3s;
+        }
+
+        input:focus, select:focus {
+            border-color: #2c5364;
+            outline: none;
+            box-shadow: 0 0 5px rgba(44,83,100,0.5);
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #2c5364;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background-color: #203a43;
+        }
+
+        @media (max-width: 400px) {
+            .card {
+                width: 90%;
+                padding: 25px;
+            }
+        }
+    </style>
 </head>
+
 <body>
 
-<h2>Sports Slot Booking</h2>
+<div class="card">
 
-<form action="/book" method="post">
+    <h2>Sports Slot Booking</h2>
 
-    User ID:<br>
-    <input type="text" name="userid" required><br><br>
+    <form action="/book" method="post">
 
-    Password:<br>
-    <input type="password" name="password" required><br><br>
+        <label>User ID</label>
+        <input type="text" nAMe="userid" required>
 
-    Date:<br>
-    <select name="date">
-        <option value="today">Today</option>
-        <option value="tomorrow">Tomorrow</option>
-    </select><br><br>
+        <label>Password</label>
+        <input type="password" nAMe="password" required>
 
-    Time Slot:<br>
-    <select name="timeslot">
-        <option>06:00 am to 07:00 am</option>
-        <option>07:00 am to 08:00 am</option>
-        <option>03:00 pm to 04:00 pm</option>
-        <option>04:00 pm to 05:00 pm</option>
-        <option>05:00 pm to 06:00 pm</option>
-        <option>06:00 pm to 07:00 pm</option>
-        <option>07:00 pm to 08:00 pm</option>
-    </select><br><br>
+        <label>Select Date</label>
+        <select nAMe="date">
+            <option value="today">Today</option>
+            <option value="tomorrow">Tomorrow</option>
+        </select>
 
-    <button type="submit">Book Slot</button>
+        <label>Select Time Slot</label>
+        <select nAMe="timeslot">
+            <option>06:00 AM to 07:00 AM</option>
+            <option>07:00 AM to 08:00 AM</option>
+            <option>03:00 PM to 04:00 PM</option>
+            <option>04:00 PM to 05:00 PM</option>
+            <option>05:00 PM to 06:00 PM</option>
+            <option>06:00 PM to 07:00 PM</option>
+            <option>07:00 PM to 08:00 PM</option>
+        </select>
 
-</form>
+        <button type="submit">Book Slot</button>
+
+    </form>
+
+</div>
 
 </body>
 </html>
