@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>GITAM Sports Booking</title>
+</head>
+<body>
+
+<h2>Sports Slot Booking</h2>
+
+<form action="/book" method="post">
+
+    User ID:<br>
+    <input type="text" name="userid" required><br><br>
+
+    Password:<br>
+    <input type="password" name="password" required><br><br>
+
+    Date:<br>
+    <select name="date">
+        <option value="today">Today</option>
+        <option value="tomorrow">Tomorrow</option>
+    </select><br><br>
+
+    Time Slot:<br>
+    <select name="timeslot">
+        <option>06:00 am to 07:00 am</option>
+        <option>07:00 am to 08:00 am</option>
+        <option>03:00 pm to 04:00 pm</option>
+        <option>04:00 pm to 05:00 pm</option>
+        <option>05:00 pm to 06:00 pm</option>
+        <option>06:00 pm to 07:00 pm</option>
+        <option>07:00 pm to 08:00 pm</option>
+    </select><br><br>
+
+    <button type="submit">Book Slot</button>
+
+</form>
+
+</body>
+</html>
