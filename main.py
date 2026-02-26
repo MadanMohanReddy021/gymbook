@@ -10,11 +10,12 @@ import httpx
 import re
 import os
 import traceback
+import time
 
 app = FastAPI()
 
 
-# ---------------- HOME PAGE ----------------
+# ---------------- HOME ----------------
 @app.get("/", response_class=HTMLResponse)
 @app.head("/")
 def home(request: Request):
@@ -24,7 +25,7 @@ def home(request: Request):
         return f.read()
 
 
-# ---------------- BOOK SLOT ----------------
+# ---------------- BOOK ----------------
 @app.post("/book")
 def book(
     userid: str = Form(...),
@@ -42,7 +43,7 @@ def book(
 
         formatted_date = selected_date.strftime("%d-%b-%Y")
 
-        # ---------- SELENIUM SETUP (DOCKER SAFE) ----------
+        # ---------- SELENIUM SETUP ----------
         chrome_options = webdriver.ChromeOptions()
         chrome_options.binary_location = "/usr/bin/chromium"
 
@@ -55,10 +56,9 @@ def book(
 
         service = Service("/usr/bin/chromedriver")
         driver = webdriver.Chrome(service=service, options=chrome_options)
-
         wait = WebDriverWait(driver, 30)
 
-        # ---------- LOGIN ----------
+        # ---------- LOGIN PAGE ----------
         driver.get("https://login.gitam.edu/Login.aspx")
 
         username = wait.until(
@@ -68,18 +68,38 @@ def book(
 
         username.send_keys(userid)
         password_field.send_keys(password)
+
+        # ---------- READ CAPTCHA ----------
+        wait.until(EC.presence_of_element_located((By.CLASS_NAME, "preview")))
+        captcha_spans = driver.find_elements(By.CSS_SELECTOR, ".preview span")
+
+        captcha_text = "".join([span.text for span in captcha_spans])
+
+        captcha_input = driver.find_element(By.ID, "captcha_form")
+        captcha_input.send_keys(captcha_text)
+
+        # ---------- CLICK LOGIN ----------
         driver.find_element(By.NAME, "Submit").click()
 
-        wait.until(EC.url_contains("gstudent"))
+        time.sleep(6)
 
-        # ---------- COPY SESSION COOKIES ----------
+        current_url = driver.current_url
+        if "Login" in current_url:
+            driver.quit()
+            return {
+                "error": "login failed",
+                "captcha_used": captcha_text,
+                "current_url": current_url
+            }
+
+        # ---------- COPY COOKIES ----------
         session = httpx.Client()
         for cookie in driver.get_cookies():
             session.cookies.set(cookie["name"], cookie["value"])
 
         driver.quit()
 
-        # ---------- OPEN SPORTS PAGE ----------
+        # ---------- OPEN SPORTS ----------
         r4 = session.get("https://gstudent.gitam.edu/Home/Gsports")
         html = r4.text
 
@@ -116,7 +136,7 @@ def book(
             "user_type": "student"
         }
 
-        # ---------- SEND BOOKING ----------
+        # ---------- BOOK SLOT ----------
         r = session.post(
             "https://gsports.gitam.edu/schedule_st/schedule",
             data=payload
