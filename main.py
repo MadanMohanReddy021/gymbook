@@ -176,26 +176,26 @@ def book(
             "form-facility": "UniSex Fitness Centre",
             "facility": "31",
             "form-court": "court 1",
-            "court": "61",
+            "court": "50",
             "from_date": formatted_date,
             "timeslot": timeslot,
             "no-of-players": "1",
             "terms": "yes",
-            "shift_id": "62",
+            "shift_id": "60",
             "type_of_user": "Gitam",
             "registration__st_fee_hidden": "",
-            "app_dept": "CSE",
+            "app_dept": "AI_DatSci",
             "campus": "BLR",
-            "college": "GST",
+            "college": "GSCSE",
             "resource_id": "",
-            "resource": "UniSex Fitness Centre",
-            "std": "4",
+            "resource": "Fitness Centre (Uni Sex)",
+            "std": "22",
             "empid": userid,
             "applicant_name": user_data["name"],
             "mobile": user_data["mobile"],
             "email": user_data["email"],
             "user_type": "student"
-        }
+        }  
 
         logger.info("Sending booking POST request...")
 
