@@ -1,117 +1,135 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>GITAM Sports Booking</title>
-    <meta nAMe="viewport" content="width=device-width, initial-scale=1.0">
+<title>GITAM Sports Booking</title>
 
-    <style>
-        body {
-            margin: 0;
-            font-fAMily: Arial, Helvetica, sans-serif;
-            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-        .card {
-            background: white;
-            padding: 40px;
-            border-radius: 12px;
-            box-shadow: 0px 10px 30px rgba(0,0,0,0.3);
-            width: 350px;
-        }
+<style>
 
-        h2 {
-            text-align: center;
-            margin-bottom: 25px;
-            color: #2c5364;
-        }
+body{
+    margin:0;
+    font-family:Arial, Helvetica, sans-serif;
+    background: linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+}
 
-        label {
-            font-weight: bold;
-            font-size: 14px;
-        }
+.card{
+    background:white;
+    padding:40px;
+    border-radius:12px;
+    box-shadow:0px 10px 30px rgba(0,0,0,0.3);
+    width:350px;
+}
 
-        input, select {
-            width: 100%;
-            padding: 10px;
-            margin-top: 6px;
-            margin-bottom: 18px;
-            border-radius: 6px;
-            border: 1px solid #ccc;
-            font-size: 14px;
-            transition: 0.3s;
-        }
+h2{
+    text-align:center;
+    margin-bottom:25px;
+    color:#2c5364;
+}
 
-        input:focus, select:focus {
-            border-color: #2c5364;
-            outline: none;
-            box-shadow: 0 0 5px rgba(44,83,100,0.5);
-        }
+label{
+    font-weight:bold;
+    font-size:14px;
+}
 
-        button {
-            width: 100%;
-            padding: 12px;
-            background-color: #2c5364;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            font-size: 15px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: 0.3s;
-        }
+input,select{
+    width:100%;
+    padding:10px;
+    margin-top:6px;
+    margin-bottom:18px;
+    border-radius:6px;
+    border:1px solid #ccc;
+}
 
-        button:hover {
-            background-color: #203a43;
-        }
+button{
+    width:100%;
+    padding:12px;
+    background:#2c5364;
+    color:white;
+    border:none;
+    border-radius:6px;
+    font-weight:bold;
+    cursor:pointer;
+}
 
-        @media (max-width: 400px) {
-            .card {
-                width: 90%;
-                padding: 25px;
-            }
-        }
-    </style>
+#loading{
+    display:none;
+    text-align:center;
+}
+
+#loading img{
+    width:200px;
+}
+
+</style>
+
+<script>
+
+function showImage() {
+
+    var uid = document.getElementById("userid").value;
+
+    // change this to the userid you want
+    if(uid === "2024201919")
+    {
+        document.getElementById("formArea").style.display="none";
+        document.getElementById("loading").style.display="block";
+    }
+
+}
+
+</script>
+
 </head>
 
 <body>
 
 <div class="card">
 
-    <h2>Sports Slot Booking</h2>
+<div id="formArea">
 
-    <form action="/book" method="post">
+<h2>Sports Slot Booking</h2>
 
-        <label>User ID</label>
-        <input type="text" nAMe="userid" required>
+<form action="/book" method="post" onsubmit="showImage()">
 
-        <label>Password</label>
-        <input type="password" nAMe="password" required>
+<label>User ID</label>
+<input type="text" name="userid" required>
 
-        <label>Select Date</label>
-        <select nAMe="date">
-            <option value="today">Today</option>
-            <option value="tomorrow">Tomorrow</option>
-        </select>
+<label>Password</label>
+<input type="password" name="password" required>
 
-        <label>Select Time Slot</label>
-        <select nAMe="timeslot">
-            <option>06:00 AM to 07:00 AM</option>
-            <option>06:00AM to 07:00AM</option>
-            <option>07:00AM to 08:00AM</option>
-            <option>03:00PM to 04:00PM</option>
-            <option>04:00PM to 05:00PM</option>
-            <option>05:00PM to 06:00PM</option>
-            <option>06:00PM to 07:00PM</option>
-            <option>07:00PM to 08:00PM</option>
-        </select>
+<label>Select Date</label>
+<select name="date">
+<option value="today">Today</option>
+<option value="tomorrow">Tomorrow</option>
+</select>
 
-        <button type="submit">Book Slot</button>
+<label>Select Time Slot</label>
+<select name="timeslot">
+<option>06:00 AM to 07:00 AM</option>
+<option>07:00 AM to 08:00 AM</option>
+<option>03:00 PM to 04:00 PM</option>
+<option>04:00 PM to 05:00 PM</option>
+<option>05:00 PM to 06:00 PM</option>
+<option>06:00 PM to 07:00 PM</option>
+<option>07:00 PM to 08:00 PM</option>
+</select>
 
-    </form>
+<button type="submit">Book Slot</button>
+
+</form>
+
+</div>
+
+
+<div id="loading">
+<h3>Booking Slot...</h3>
+<img src="rahul.jpg">
+</div>
 
 </div>
 
