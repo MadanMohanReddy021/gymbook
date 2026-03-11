@@ -1,4 +1,5 @@
 from fastapi import FastAPI, Form, Request
+from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse
 from datetime import datetime, timedelta
 from selenium import webdriver
@@ -23,6 +24,7 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 app = FastAPI()
+app.mount("/static", StaticFiles(directory="."), name="static")
 
 # -------- LOAD USERS --------
 logger.info("Loading users.json...")
